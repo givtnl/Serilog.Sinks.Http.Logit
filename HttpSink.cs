@@ -9,7 +9,7 @@ using Serilog.Formatting;
 using Serilog.Events;
 using Serilog.Configuration;
 
-namespace Serilog.Sinks.Http
+namespace Serilog.Sinks.Http.LogitV2
 {
     public class HttpSink : ILogEventSink, IDisposable
     {
@@ -23,7 +23,7 @@ namespace Serilog.Sinks.Http
             _formatter = new JsonFormatter();
             _url = url;
             _apiKey = apiKey;
-            
+
             if (handler != null)
                 _httpClient = new HttpClient(handler);
             else
@@ -36,7 +36,7 @@ namespace Serilog.Sinks.Http
             _formatter.Format(logEvent, new StringWriter(sb));
             var data = sb.ToString().Replace("RenderedMessage", "message");
 
-            Task.Factory.StartNew(async () => 
+            Task.Factory.StartNew(async () =>
             {
                 try
                 {
@@ -44,7 +44,8 @@ namespace Serilog.Sinks.Http
                     content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
                     content.Headers.Add("ApiKey", _apiKey);
                     (await _httpClient.PostAsync(_url, content)).Dispose();
-                } catch  { } /* This is a logging framework. We don't care about logs not succeeding */
+                }
+                catch { } /* This is a logging framework. We don't care about logs not succeeding */
             });
         }
 
@@ -56,11 +57,11 @@ namespace Serilog.Sinks.Http
 
     public static class HttpLoggerConfigurationExtensions
     {
-        public static LoggerConfiguration HttpSink(this LoggerSinkConfiguration loggerConfiguration, string url, string apiKey, 
+        public static LoggerConfiguration HttpSink(this LoggerSinkConfiguration loggerConfiguration, string url, string apiKey,
                 HttpMessageHandler msgHandler = null, LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum)
         {
             var sink = new HttpSink(url, apiKey, msgHandler);
             return loggerConfiguration.Sink(sink, restrictedToMinimumLevel);
-        } 
+        }
     }
 }

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Net;
 using System.IO;
 
-namespace Serilog.Sinks.Http.Logger
+namespace Serilog.Sinks.Http.LogitV2
 {
     public abstract class CallerMemberLogger : ILog, IDisposable
     {

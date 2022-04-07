@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Net;
 
-namespace Serilog.Sinks.Http.Logger
+namespace Serilog.Sinks.Http.LogitV2
 {
     public interface ILog
     {
